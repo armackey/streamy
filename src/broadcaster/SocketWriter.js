@@ -2,7 +2,8 @@ var { Writable } = require('stream');
 
 module.exports = class socketWriter extends Writable {
   constructor(uri){
-    this.socket = new Websocket(uri);
+    super();
+    this.socket = new WebSocket(uri);
     var socket = this.socket;
     this.on('destroy', ()=>{
       this.socket && this.socket.close();
@@ -19,7 +20,6 @@ module.exports = class socketWriter extends Writable {
       socket.removeEventListener('error', el);
       this._error = e;
       this.emit('error', e);
-      this.destroy();
     });
   }
   _flush(cb) {
@@ -28,6 +28,9 @@ module.exports = class socketWriter extends Writable {
   _write(chunk, encoding, callback){
     this.socket.send(chunk);
     callback();
+  }
+  _flush(callback){
+    this.socket.close();
   }
   promiseReady(){
     return new Promise((res, rej)=>{

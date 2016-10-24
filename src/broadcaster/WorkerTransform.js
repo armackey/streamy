@@ -9,7 +9,7 @@ module.exports = class WorkerTransform extends Transform {
     var handleError = (e)=>{
       this._error = e;
       this.emit('error', this._error);
-      return this.destroy();
+      return this.push(null);
     }
     try{
       this.worker = WebWorkify(workerFunction);
@@ -21,8 +21,8 @@ module.exports = class WorkerTransform extends Transform {
     var el, rl;
     var worker = this.worker;
     worker.addEventListener('message', rl = (e)=>{
-      socket.removeEventListener('open', rl);
-      socket.removeEventListener('error', el);
+      worker.removeEventListener('open', rl);
+      worker.removeEventListener('error', el);
       if(e.data !== 'ready'){
         return handleError(new Error('improper start'));
       }
@@ -32,9 +32,9 @@ module.exports = class WorkerTransform extends Transform {
       })
       this.emit('ready');
     });
-    this.socket.addEventListener('error', el = (e)=>{
-      socket.removeEventListener('open', rl);
-      socket.removeEventListener('error', el);
+    this.worker.addEventListener('error', el = (e)=>{
+      worker.removeEventListener('open', rl);
+      worker.removeEventListener('error', el);
       return handleError(e);
     })
 
