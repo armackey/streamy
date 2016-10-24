@@ -5,7 +5,7 @@ module.exports = class socketWriter extends Writable {
     this.socket = new Websocket(uri);
     var socket = this.socket;
     this.on('destroy', ()=>{
-      this.socket && this.socket.destroy();
+      this.socket && this.socket.close();
     })
     var el, rl;
     this.socket.addEventListener('open', rl = ()=>{
@@ -21,6 +21,9 @@ module.exports = class socketWriter extends Writable {
       this.emit('error', e);
       this.destroy();
     });
+  }
+  _flush(cb) {
+
   }
   _write(chunk, encoding, callback){
     this.socket.send(chunk);
