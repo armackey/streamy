@@ -1,4 +1,4 @@
-var Transform = require('stream');
+var { Transform } = require('stream');
 var WebWorkify = require('webworkify');
 var setImmediate = require('setimmediate');
 
@@ -27,24 +27,25 @@ module.exports = class WorkerTransform extends Transform {
         return handleError(new Error('improper start'));
       }
       this._ready = true;
-      this.worker.addEventListener('terminate', ()=>{
-        this.push(null);
-      })
       this.emit('ready');
     });
     this.worker.addEventListener('error', el = (e)=>{
       worker.removeEventListener('open', rl);
       worker.removeEventListener('error', el);
       return handleError(e);
-    })
-
-    this.worker.addEventListener('message', (e)=>{
-      this.push(e.data);
     });
+    this.on('ready', ()=>{
+      this.worker.addEventListener('message', (e)=>{
+        this.push(new Buffer(e.data));
+      });
+      this.worker.addEventListener('terminate', ()=>{
+        this.push(null);
+      })
+    })
   }
 
   _transform(chunk, encoding, callback){
-    this.worker.send(chunk);
+    this.worker.postMessage(chunk.buffer);
     callback();
   }
 
