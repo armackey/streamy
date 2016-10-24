@@ -1,6 +1,6 @@
 var Websocket = require('websocket-driver');
 
-module.exports = function(req, socke){
+module.exports = function(req, socket){
   req.method = 'GET';
 
   if (!Websocket.isWebSocket(req)){

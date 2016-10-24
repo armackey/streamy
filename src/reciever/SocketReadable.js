@@ -14,7 +14,7 @@ module.exports = class SocketReadable extends Readable {
       socket.removeEventListener('open', rl);
       socket.removeEventListener('error', el);
       this._ready = true;
-      socket.on('message', (e) =>{
+      socket.addEventListener('message', (e) =>{
         this.push(e.data);
       });
 

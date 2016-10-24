@@ -17,7 +17,7 @@ module.exports = class Chunker extends Transform {
       var length = new DataView(activeBuffer.buffer).readFloat32(0);
       if(activeBuffer.byteLength - 4 < length){
         this.chunkBuffer = activeBuffer;
-        return
+        return;
       }
       this.push(activeBuffer.slice(4, length));
       runChunker(activeBuffer.slice(4 + length));
@@ -27,6 +27,6 @@ module.exports = class Chunker extends Transform {
     concatBuffer.set(0, lastBuffer);
     concatBuffer.set(lastBuffer.byteLength, chunk);
     runChunker(concatBuffer);
-    callback()
+    callback();
   }
 };
