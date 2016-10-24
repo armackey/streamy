@@ -3,13 +3,15 @@ var Websocket = require('websocket-driver');
 
 module.exports = class SocketReadable extends Readable {
   constructor(req, socket){
+    super();
+    req.method = 'GET';
 
     if (!Websocket.isWebSocket(req)){
       throw new Error('This is not a websocket');
     }
 
     var driver = Websocket.http(req);
-    driver.io.write(body);
+    driver.io.write(req.body);
     socket.pipe(driver.io).pipe(socket);
     driver.messages.on('data', (message)=>{
       this.push(message);

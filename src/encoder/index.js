@@ -1,4 +1,4 @@
-var { Transform } = require('stream');
+var { Readable, Writable } = require('stream');
 var ChunkDecode = require('../shared/ChunkDecode');
 var ChunkEncode = require('../shared/ChunkEncode');
 var ChannelSplitter = require('./ChannelSplitter');
@@ -28,7 +28,6 @@ module.exports = function(self){
     }
   });
 
-  var chunker = new Chunker();
   var channelSplitter = new ChannelSplitter();
   var wavEncoder = new WavEncoder();
 
