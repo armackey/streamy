@@ -1,19 +1,11 @@
 var { Readable } = require('stream');
-var Websocket = require('websocket-driver');
+var reqtodriver = require('./ReqtoDriver');
 
 module.exports = class SocketReadable extends Readable {
   constructor(req, socket){
     super();
 
-    if (!Websocket.isWebSocket(req)){
-      throw new Error('This is not a websocket');
-    }
-
-    var driver = Websocket.http(req);
-    driver.io.write(req.body);
-    socket.pipe(driver.io).pipe(socket);
-    driver.start();
-    this.driver = driver;
+    this.driver = reqtodriver(req, socket);
   }
   _write(chunk, encoding, callback){
     driver.binary(chunk);
