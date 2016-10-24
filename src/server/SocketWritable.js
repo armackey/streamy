@@ -8,7 +8,7 @@ module.exports = class SocketReadable extends Readable {
     this.driver = reqtodriver(req, socket);
   }
   _write(chunk, encoding, callback){
-    driver.binary(chunk)
+    driver.binary(chunk);
     callback();
   }
   _flush(){

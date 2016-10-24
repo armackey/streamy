@@ -11,7 +11,7 @@ module.exports = class SocketReadable extends Readable {
       this.push(message);
     });
     socket.on('close', ()=>{
-      this.push(null)
+      this.push(null);
     });
   }
   _read(){ return false; }
