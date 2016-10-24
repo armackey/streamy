@@ -3,7 +3,6 @@ var { Readable } = require('stream');
 var PROCESSOR_BUFFER_LENGTH = 16384; // 4096;
 var PROCESSOR_CHANNEL_COUNT = 1; // 1;
 
-
 module.exports = class MediaStreamAudioReadable extends Readable {
   constructor(audiocontext, audioStream, procesor_buffer_length, processor_channel_count){
     super({ objectMode : true });
@@ -27,11 +26,14 @@ module.exports = class MediaStreamAudioReadable extends Readable {
       lengthBuffer[0] = 4 + channelLength * PROCESSOR_CHANNEL_COUNT; //
       var channelLengthBuffer = new Float32Array();
       channelLengthBuffer[0] = channelLength;
-      this.push(lengthBuffer.buffer, channelLengthBuffer.buffer);
+      this.push(
+        new Buffer(lengthBuffer.buffer),
+        new Buffer(channelLengthBuffer.buffer)
+      );
 
       for(var i = 0; i < PROCESSOR_CHANNEL_COUNT; i++){
         var buffer = audioProcessingEvent.inputBuffer.getChannelData(0);
-        this.push(buffer.slice().buffer);
+        this.push(new Buffer(buffer.slice().buffer));
       }
     });
 

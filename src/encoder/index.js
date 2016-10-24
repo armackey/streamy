@@ -15,7 +15,7 @@ module.exports = function(self){
     if(e.data === 'end'){
       selfReadStream.push(null);
     }
-    selfReadStream.push(e.data);
+    selfReadStream.push(new Buffer(e.data));
   });
 
   var selfWriteStream = new Writable({
@@ -37,4 +37,6 @@ module.exports = function(self){
     .pipe(wavEncoder)
     .pipe(new ChunkEncode())
     .pipe(selfWriteStream);
+
+  self.postMessage('ready');
 }

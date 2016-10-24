@@ -1,6 +1,6 @@
 var { Transform } = require('stream');
 
-module.exports = class Chunker extends Transform {
+module.exports = class ChunkDecoder extends Transform {
   constructor(){
     super({
       writableObjectMode : true
@@ -19,7 +19,7 @@ module.exports = class Chunker extends Transform {
         this.chunkBuffer = activeBuffer;
         return
       }
-      this.push(activeBuffer.slice(4, length));
+      this.push(new Buffer(activeBuffer.slice(4, length).buffer));
       runChunker(activeBuffer.slice(4 + length));
     };
     var lastBuffer = this.chunkBuffer;

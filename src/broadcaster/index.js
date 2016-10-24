@@ -2,7 +2,7 @@ var getUserMedia = require('getusermedia');
 var url = require('url');
 var MediaStreamAudioReadable = require('./MediaStreamAudioReadable');
 var WorkerTransform = require('./WorkerTransform');
-var SocketWriter = require('./SocketWriter');
+var SocketWriter = require('./SocketWritable');
 var ChunkEncode = require('../shared/ChunkEncode');
 
 var AUDIO_CONTEXT;
@@ -19,6 +19,7 @@ var application = {
           res(stream);
         });
       }).then(function(stream){
+        console.log('mediastream got');
         return new MediaStreamAudioReadable(AUDIO_CONTEXT, stream);
       }),
       (function(){
@@ -36,6 +37,8 @@ var application = {
     ]).then(function(results){
       // [ socket, audioStream ]
       var [ audioStreamReadable, workerTransform, socketWriter ] = results;
+
+      console.log(workerTransform);
 
       audioStreamReadable.pipe(new ChunkEncode()).pipe(workerTransform).pipe(socketWriter);
 
