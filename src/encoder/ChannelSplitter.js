@@ -2,11 +2,11 @@ var { Transform } = require('stream');
 
 module.exports = class Chunker extends Transform {
   constructor(numChannels){
-    this.numChannels = numChannels;
     super({
       readableObjectMode : true,
       writableObjectMode : true
     });
+    this.numChannels = numChannels;
 
     this.chunkBuffer = new Uint8Array(0);
   }

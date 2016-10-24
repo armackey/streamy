@@ -41,6 +41,7 @@ router.get('/broadcaster.js', function(req, res){
   res.setHeader('Content-Type', 'application/javascript');
   var b = browserify();
   b.add(path.join(__dirname, '../broadcaster/index.js'))
+  b.transform(require('brfs'), {});
   b.bundle().pipe(res);
 });
 
@@ -58,6 +59,7 @@ router.get('/reciever.js', function(req, res){
   res.setHeader('Content-Type', 'application/javascript');
   var b = browserify();
   b.add(path.join(__dirname, '../reciever/index.js'))
+  b.transform(require('brfs'), {});
   b.bundle().pipe(res);
 });
 

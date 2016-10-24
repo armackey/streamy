@@ -9,18 +9,6 @@ module.exports = class WavEncoder extends Transform {
 
     this.sampleRate = sampleRate || 44100;
     this.numChannels = numChannels || 1;
-    this.maxSamples = maxSamples || 1
-
-    /* global WavEncoder */
-    var WavString = fs.readFileSync(
-      __dirname + '/Encoder.js',
-      'utf-8'
-    );
-    eval(WavString);
-    this.wavEncoder = new WavEncoder(
-      sampleRate || 44100,
-      numberOfChannels || 1
-    );
 
   }
   _transform(buffers, encoder, callback){

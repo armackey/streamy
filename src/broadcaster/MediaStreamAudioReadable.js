@@ -1,20 +1,19 @@
 var { Readable } = require('stream');
 
 var PROCESSOR_BUFFER_LENGTH = 16384; // 4096;
-var PROCESSOR_CHANNEL_COUNT = 1; // 4096;
+var PROCESSOR_CHANNEL_COUNT = 1; // 1;
 
-
-var AUDIO_CONTEXT = new AudioContext();
 
 module.exports = class MediaStreamAudioReadable extends Readable {
-  constructor(audioStream, procesor_buffer_length, processor_channel_count){
+  constructor(audiocontext, audioStream, procesor_buffer_length, processor_channel_count){
     super({ objectMode : true });
+    this.ctx = audiocontext;
 
     procesor_buffer_length = procesor_buffer_length || PROCESSOR_BUFFER_LENGTH;
     processor_channel_count = processor_channel_count || PROCESSOR_CHANNEL_COUNT;
 
-    var inputSource = AUDIO_CONTEXT.createMediaStreamSource(audioStream);
-    var processDestination = createScriptProcessor(
+    var inputSource = audiocontext.createMediaStreamSource(audioStream);
+    var processDestination = audiocontext.createScriptProcessor(
       procesor_buffer_length,
       processor_channel_count,
       1
@@ -37,10 +36,10 @@ module.exports = class MediaStreamAudioReadable extends Readable {
     });
 
     inputSource.connect(processDestination);
-    processDestination.connect(AUDIO_CONTEXT.destination);
+    processDestination.connect(this.ctx.destination);
     audioStream.addEventListener('ended', ()=>{
       inputSource.disconnect(processDestination)
-      processDestination.disconnect(AUDIO_CONTEXT.destination);
+      processDestination.disconnect(this.ctx.destination);
       this.push(null);
     });
   }

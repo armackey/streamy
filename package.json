@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/formula1/streamy#readme",
   "dependencies": {
+    "brfs": "^1.4.3",
     "browserify": "^13.1.1",
     "getusermedia": "^2.0.0",
     "router": "^1.1.4",

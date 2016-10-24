@@ -13,8 +13,13 @@ var application = {
       AUDIO_CONTEXT = new AudioContext();
     }
     return Promise.all([
-      getUserMedia({ video : false, audio : true }).then(function(stream){
-        return new MediaStreamAudioReadable(stream);
+      new Promise(function(res, rej){
+        getUserMedia({ video : false, audio : true }, function(err, stream){
+          if(err) return rej(err);
+          res(stream);
+        });
+      }).then(function(stream){
+        return new MediaStreamAudioReadable(AUDIO_CONTEXT, stream);
       }),
       (function(){
         var fn = require('../encoder');
